@@ -1,16 +1,22 @@
-﻿using UnityEngine;
+﻿using dev.vivekraman.RiverCrossing.Core.Enums;
+using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.Core
 {
 public class Character : MonoBehaviour
 {
-  [SerializeField] private string characterClass;
-  
-  private RiverBank nearestBank = null;
+  public string Name => characterClass + ' ' + name;
 
-  private void Awake()
+  [SerializeField] private CharacterClass characterClass = CharacterClass.Null;
+
+  public RiverBankSide Side { get; set; } = RiverBankSide.Left;
+
+  private void OnMouseDown()
   {
-    // TODO: determine nearestBank
+    Boat boat = GameManager.Instance.TheBoat;
+
+      GameManager.Instance.TheBoat.TryToggleBoard(this);
+
   }
 }
 }

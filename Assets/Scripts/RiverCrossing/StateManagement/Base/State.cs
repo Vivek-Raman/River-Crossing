@@ -1,4 +1,6 @@
-﻿namespace dev.vivekraman.RiverCrossing.StateManagement.Base
+﻿using System.Collections;
+
+namespace dev.vivekraman.RiverCrossing.StateManagement.Base
 {
 public abstract class State
 {
@@ -14,12 +16,14 @@ public abstract class State
     return true;
   }
 
-  public virtual void OnStateEnter()
+  public virtual IEnumerator OnStateEnter()
   {
+    yield break;
   }
 
-  public virtual void OnStateExit()
+  public virtual IEnumerator OnStateExit()
   {
+    yield break;
   }
 
   public virtual void OnStateTick()

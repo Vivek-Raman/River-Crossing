@@ -15,6 +15,8 @@ public abstract class StateManager : MonoBehaviour
 
   public void SetState(string stateName)
   {
+    if (currentState?.Name == stateName) return;
+
     if (!states.TryGetValue(stateName, out State newState))
     {
       Debug.LogError("State " + stateName + "not registered");
@@ -24,12 +26,12 @@ public abstract class StateManager : MonoBehaviour
     if (currentState != null)
     {
       Debug.Log("Leaving state: " + currentState.Name);
-      currentState.OnStateExit();
+      StartCoroutine(currentState.OnStateExit());
     }
 
     currentState = newState;
     Debug.Log("Entering state: " + currentState.Name);
-    currentState.OnStateEnter();
+    StartCoroutine(currentState.OnStateEnter());
   }
 
   private void Update()
