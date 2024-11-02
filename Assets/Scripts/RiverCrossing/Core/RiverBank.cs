@@ -1,4 +1,5 @@
-﻿using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using System.Collections.Generic;
+using dev.vivekraman.RiverCrossing.Core.Enums;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -10,12 +11,19 @@ public class RiverBank : MonoBehaviour
 
   [SerializeField] private RiverBankSide side = RiverBankSide.Left;
 
-  private Transform boatDockingPoint = null;
+  private Transform boatAnchor = null;
+  private Dictionary<Transform, Character> bankedCharacters = null;
 
   private void Awake()
   {
-    boatDockingPoint = this.transform.GetChild(0)?.transform;
-    Assert.IsNotNull(boatDockingPoint);
+    boatAnchor = this.transform.GetChild(0)?.transform;
+    Assert.IsNotNull(boatAnchor);
+
+    bankedCharacters = new Dictionary<Transform, Character>();
+    foreach (Transform characterAnchor in this.transform.GetChild(1))
+    {
+      bankedCharacters.Add(characterAnchor, null);
+    }
   }
 
   private void Start()
@@ -23,9 +31,17 @@ public class RiverBank : MonoBehaviour
     GameManager.Instance.RegisterRiverBank(this);
   }
 
-  public Transform GetCharacterAnchor()
+  public Transform AssignAnchorToCharacter(Character character)
   {
-    // TODO: distribute positions on river bank
+    foreach ((Transform anchor, Character existing) in bankedCharacters)
+    {
+      if (existing != null) continue;
+
+      bankedCharacters[anchor] = character;
+      return anchor;
+    }
+
+    Debug.LogError("Ran out of bank anchors!");
     return this.transform;
   }
 }
