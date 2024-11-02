@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.MissionariesAndCannibals.Game.States;
 using UnityEngine;
@@ -14,9 +15,9 @@ public class Boat : MonoBehaviour
   public RiverBankSide CurrentSide { get; private set; } = RiverBankSide.Left;
 
   private GameManager gameManager = null;
-
-  private Dictionary<string, Character> charactersOnBoard = null;
-  private const int MAX_CHARACTERS_ON_BOAT = 2;
+  private Transform leftAnchor = null;
+  private Transform rightAnchor = null;
+  private Dictionary<BoatSide, Character> charactersOnBoard = null;
 
   private void Awake()
   {
@@ -26,7 +27,17 @@ public class Boat : MonoBehaviour
     gameManager = GameManager.Instance;
     Assert.IsNotNull(gameManager);
 
-    charactersOnBoard = new Dictionary<string, Character>();
+    rightAnchor = this.transform.GetChild(0)?.GetChild(0);
+    Assert.IsNotNull(rightAnchor);
+    leftAnchor = this.transform.GetChild(0)?.GetChild(1);
+    Assert.IsNotNull(leftAnchor);
+
+    charactersOnBoard = new();
+  }
+
+  private void OnMouseDown()
+  {
+    TryTraverseBoat();
   }
 
   public void TryToggleBoard(Character character)
@@ -34,38 +45,71 @@ public class Boat : MonoBehaviour
     if (character.Side != this.CurrentSide) return;
 
     if (!gameManager.CanBoardBoat) return;
-    if (charactersOnBoard.ContainsKey(character.Name))
-    {
-      // alight the boat
-      charactersOnBoard.Remove(character.Name);
 
-      // TODO: distribute positions on river bank
-      // TODO: tween / animate
+    if (charactersOnBoard.TryGetValue(BoatSide.Left, out Character leftCharacter) &&
+        leftCharacter.Name == character.Name)
+    {
+      // alight the boat on the left side
+      charactersOnBoard.Remove(BoatSide.Left);
+      character.transform.SetParent(null);
       gameManager.StateManager.SetState(nameof(CharacterBoardingState));
-      character.transform.position = gameManager.GetRiverBank(CurrentSide).transform.position;
+      // TODO: tween / animate
+      character.transform.position = gameManager.GetRiverBank(CurrentSide).GetCharacterAnchor().position;
+    }
+    else if (charactersOnBoard.TryGetValue(BoatSide.Right, out Character rightCharacter) &&
+             rightCharacter.Name == character.Name)
+    {
+      // alight the boat on the right side
+      charactersOnBoard.Remove(BoatSide.Right);
+      character.Side = CurrentSide;
+      character.transform.SetParent(null);
+      gameManager.StateManager.SetState(nameof(CharacterBoardingState));
+      // TODO: tween / animate
+      character.transform.position = gameManager.GetRiverBank(CurrentSide).GetCharacterAnchor().position;
     }
     else
     {
-      if (charactersOnBoard.Count >= MAX_CHARACTERS_ON_BOAT) return;
+      if (charactersOnBoard.Count >= 2) return;
 
       // board the boat
       gameManager.StateManager.SetState(nameof(CharacterBoardingState));
-      charactersOnBoard.Add(character.Name, character);
-
-
-      // TODO: fix boarded position on boat
+      BoatSide side = charactersOnBoard.ContainsKey(BoatSide.Left) ? BoatSide.Right : BoatSide.Left;
+      charactersOnBoard.Add(side, character);
+      Transform anchor = side == BoatSide.Left ? leftAnchor : rightAnchor;
+      character.transform.SetParent(anchor);
       // TODO: tween / animate
-      character.transform.position = this.transform.position + Vector3.forward;
+      character.transform.SetLocalPositionAndRotation(Vector3.zero, character.transform.rotation);
     }
     // TODO:
     // TODO:
   }
 
-  public void Traverse()
+  public void TryTraverseBoat()
   {
+    if (!gameManager.CanBoatMove)
+    {
+      return;
+    }
+
     // TODO: update state to traversing
-    // TODO: update CurrentSide
+    gameManager.StateManager.SetState(nameof(BoatTraversingState));
+
+    CurrentSide = CurrentSide == RiverBankSide.Left ? RiverBankSide.Right : RiverBankSide.Left;
+    foreach (Character character in charactersOnBoard.Values)
+    {
+      character.Side = CurrentSide;
+    }
+
     // TODO: tween between leftWaypoint and rightWaypoint
+    switch (CurrentSide)
+    {
+      case RiverBankSide.Left:
+        this.transform.position = leftWaypoint.position;
+        break;
+      case RiverBankSide.Right:
+        this.transform.position = rightWaypoint.position;
+        break;
+    }
   }
 }
 }

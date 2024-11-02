@@ -18,12 +18,12 @@ public abstract class State
 
   public virtual IEnumerator OnStateEnter()
   {
-    yield break;
+    yield return null;
   }
 
   public virtual IEnumerator OnStateExit()
   {
-    yield break;
+    yield return null;
   }
 
   public virtual void OnStateTick()

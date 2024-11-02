@@ -13,10 +13,7 @@ public class Character : MonoBehaviour
 
   private void OnMouseDown()
   {
-    Boat boat = GameManager.Instance.TheBoat;
-
-      GameManager.Instance.TheBoat.TryToggleBoard(this);
-
+    GameManager.Instance.TheBoat.TryToggleBoard(this);
   }
 }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using dev.vivekraman.RiverCrossing.Core.Enums;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -17,7 +16,17 @@ public class RiverBank : MonoBehaviour
   {
     boatDockingPoint = this.transform.GetChild(0)?.transform;
     Assert.IsNotNull(boatDockingPoint);
+  }
+
+  private void Start()
+  {
     GameManager.Instance.RegisterRiverBank(this);
+  }
+
+  public Transform GetCharacterAnchor()
+  {
+    // TODO: distribute positions on river bank
+    return this.transform;
   }
 }
 }

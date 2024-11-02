@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.MissionariesAndCannibals.Game.States
 {
-public class CharacterBoardingState : State
+public class BoatTraversingState : State
 {
-  public override string Name => nameof(CharacterBoardingState);
+  public override string Name => nameof(BoatTraversingState);
 
   public override IEnumerator OnStateEnter()
   {

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
   public static GameManager Instance { get; private set; } = null;
 
-  public bool BoatCanMove { get; set; } = true;
+  public bool CanBoatMove { get; set; } = true;
   public bool CanBoardBoat { get; set; } = true;
 
   public Boat TheBoat => boat;
@@ -37,15 +37,10 @@ public class GameManager : MonoBehaviour
     Assert.IsNotNull(boat);
   }
 
-  private void Start()
-  {
-    Assert.IsTrue(riverBanks.Count == 2);
-  }
-
   [ContextMenu(nameof(DescribeState))]
   public void DescribeState()
   {
-    Debug.LogFormat("State: \nBoatCanMove: ${0}\n CanBoardBoat: ${1}", BoatCanMove, CanBoardBoat);
+    Debug.LogFormat("State: \nBoatCanMove: ${0}\n CanBoardBoat: ${1}", CanBoatMove, CanBoardBoat);
   }
 
   public void RegisterRiverBank(RiverBank riverBank)

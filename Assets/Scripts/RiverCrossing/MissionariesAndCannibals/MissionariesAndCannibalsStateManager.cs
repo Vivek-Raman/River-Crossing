@@ -10,10 +10,13 @@ public class MissionariesAndCannibalsStateManager : StateManager
   {
     base.RegisterState(new IdleState());
     base.RegisterState(new CharacterBoardingState());
+    base.RegisterState(new BoatTraversingState());
     // base.RegisterState();
     // base.RegisterState();
-    // base.RegisterState();
+  }
 
+  private void Start()
+  {
     base.SetState(nameof(IdleState));
   }
 }
