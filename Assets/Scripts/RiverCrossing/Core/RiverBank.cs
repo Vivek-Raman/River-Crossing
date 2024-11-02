@@ -44,5 +44,20 @@ public class RiverBank : MonoBehaviour
     Debug.LogError("Ran out of bank anchors!");
     return this.transform;
   }
+
+  public void RemoveCharacterFromAnchor(Character character)
+  {
+    Transform anchorToClear = null;
+    foreach ((Transform anchor, Character existing) in bankedCharacters)
+    {
+      if (existing != character) continue;
+      anchorToClear = anchor;
+    }
+
+    if (anchorToClear != null)
+    {
+      bankedCharacters[anchorToClear] = null;
+    }
+  }
 }
 }

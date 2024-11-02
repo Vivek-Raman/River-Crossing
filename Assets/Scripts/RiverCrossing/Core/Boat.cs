@@ -74,6 +74,7 @@ public class Boat : MonoBehaviour
 
       // board the boat
       gameManager.StateManager.SetState(nameof(CharacterBoardingState));
+      gameManager.GetRiverBank(CurrentSide).RemoveCharacterFromAnchor(character);
       BoatSide side = charactersOnBoard.ContainsKey(BoatSide.Left) ? BoatSide.Right : BoatSide.Left;
       charactersOnBoard.Add(side, character);
       Transform anchor = side == BoatSide.Left ? leftAnchor : rightAnchor;
@@ -82,7 +83,7 @@ public class Boat : MonoBehaviour
     }
   }
 
-  public void TryTraverseBoat()
+  private void TryTraverseBoat()
   {
     if (!gameManager.CanBoatMove) return;
     if (charactersOnBoard.Count <= 0) return;
