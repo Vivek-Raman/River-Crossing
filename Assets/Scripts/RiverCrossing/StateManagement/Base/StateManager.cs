@@ -25,12 +25,12 @@ public abstract class StateManager : MonoBehaviour
 
     if (currentState != null)
     {
-      Debug.Log("Leaving state: " + currentState.Name);
+      // Debug.Log("Leaving state: " + currentState.Name);
       StartCoroutine(currentState.OnStateExit());
     }
 
     currentState = newState;
-    Debug.Log("Entering state: " + currentState.Name);
+    // Debug.Log("Entering state: " + currentState.Name);
     StartCoroutine(currentState.OnStateEnter());
   }
 

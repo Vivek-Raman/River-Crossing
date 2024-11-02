@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -58,6 +59,11 @@ public class RiverBank : MonoBehaviour
     {
       bankedCharacters[anchorToClear] = null;
     }
+  }
+
+  public List<Character> FetchBankedCharacters()
+  {
+    return bankedCharacters.Values.Where(ch => ch != null).ToList();
   }
 }
 }

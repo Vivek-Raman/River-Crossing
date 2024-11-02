@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
 using dev.vivekraman.RiverCrossing.Core.Enums;
+using dev.vivekraman.RiverCrossing.Core.Rules;
+using dev.vivekraman.RiverCrossing.Core.Spawner;
 using dev.vivekraman.RiverCrossing.MissionariesAndCannibals;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace dev.vivekraman.RiverCrossing.Core
 {
+[RequireComponent(typeof(MissionariesAndCannibalsStateManager))]
+[RequireComponent(typeof(RuleEngine))]
+[RequireComponent(typeof(InitialSpawner))]
 public class GameManager : MonoBehaviour
 {
   public static GameManager Instance { get; private set; } = null;
@@ -14,9 +19,11 @@ public class GameManager : MonoBehaviour
   public bool CanBoardBoat { get; set; } = true;
 
   public Boat TheBoat => boat;
-  [SerializeField] private Boat boat = null;
-
   public MissionariesAndCannibalsStateManager StateManager { get; private set; } = null;
+  public RuleEngine TheRuleEngine { get; private set; } = null;
+  public InitialSpawner Spawner { get; private set; } = null;
+
+  [SerializeField] private Boat boat = null;
 
   private Dictionary<RiverBankSide, RiverBank> riverBanks = new();
 
@@ -32,15 +39,13 @@ public class GameManager : MonoBehaviour
     }
 
     StateManager = this.GetComponent<MissionariesAndCannibalsStateManager>();
+    TheRuleEngine = this.GetComponent<RuleEngine>();
+    Spawner = this.GetComponent<InitialSpawner>();
     Assert.IsNotNull(StateManager);
+    Assert.IsNotNull(TheRuleEngine);
+    Assert.IsNotNull(Spawner);
 
     Assert.IsNotNull(boat);
-  }
-
-  [ContextMenu(nameof(DescribeState))]
-  public void DescribeState()
-  {
-    Debug.LogFormat("State: \nBoatCanMove: ${0}\n CanBoardBoat: ${1}", CanBoatMove, CanBoardBoat);
   }
 
   public void RegisterRiverBank(RiverBank riverBank)

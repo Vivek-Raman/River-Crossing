@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.MissionariesAndCannibals.Game.States;
 using DG.Tweening;
@@ -105,6 +104,9 @@ public class Boat : MonoBehaviour
         this.transform.DOLocalMove(rightWaypoint.position, 1f);
         break;
     }
+
+    bool valid = gameManager.TheRuleEngine.TryValidateRules();
+    Debug.Log("Setup valid: " + valid);
   }
 }
 }

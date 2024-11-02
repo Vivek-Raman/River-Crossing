@@ -6,10 +6,10 @@ namespace dev.vivekraman.RiverCrossing.Core
 public class Character : MonoBehaviour
 {
   public string Name => characterClass + ' ' + name;
+  public RiverBankSide Side { get; set; } = RiverBankSide.Left;
+  public CharacterClass TheCharacterClass => characterClass;
 
   [SerializeField] private CharacterClass characterClass = CharacterClass.Null;
-
-  public RiverBankSide Side { get; set; } = RiverBankSide.Left;
 
   private void OnMouseDown()
   {
