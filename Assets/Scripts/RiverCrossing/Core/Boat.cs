@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using dev.vivekraman.RiverCrossing.Core.Enums;
-using dev.vivekraman.RiverCrossing.MissionariesAndCannibals.Game.States;
+using dev.vivekraman.RiverCrossing.Core.States;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Assertions;

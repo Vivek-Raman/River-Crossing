@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using dev.vivekraman.RiverCrossing.Core.Enums;
 using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.Core.Rules
 {
 public class RuleEngine : MonoBehaviour
 {
-  [SerializeField] private List<Rule> rules;
-
   public bool ShouldEvaluateRules { get; set; } = true;
+  public GameMode TheGameMode => gameMode;
+
+  [SerializeField] private GameMode gameMode = GameMode.MissionariesAndCannibals;
 
   public bool TryValidateRules()
   {
@@ -28,38 +26,31 @@ public class RuleEngine : MonoBehaviour
 
   private bool RunRulesOnRiverBank(RiverBank riverBank)
   {
-    foreach (Rule rule in rules)
+    switch (gameMode)
     {
-      List<Character> charactersOnBank = riverBank.FetchBankedCharacters();
-
-      int numberOfCharactersOfClass1 = 0;
-      int numberOfCharactersOfClass2 = 0;
-      foreach (Character character in charactersOnBank)
+      case GameMode.MissionariesAndCannibals:
       {
-        if (character.TheCharacterClass == rule.Class1) ++numberOfCharactersOfClass1;
-        else if (character.TheCharacterClass == rule.Class2) ++numberOfCharactersOfClass2;
-      }
+        int missionaryCount = 0;
+        int cannibalCount = 0;
+        foreach (Character character in riverBank.FetchBankedCharacters())
+        {
+          switch (character.TheCharacterClass)
+          {
+            case CharacterClass.Cannibal:
+              ++cannibalCount;
+              break;
+            case CharacterClass.Missionary:
+              ++missionaryCount;
+              break;
+          }
+        }
 
-      switch (rule.Comparator)
-      {
-        case Comparator.GreaterThan:
-        {
-          if (numberOfCharactersOfClass1 < numberOfCharactersOfClass2) return false;
-          break;
-        }
-        case Comparator.LessThan:
-        {
-          if (numberOfCharactersOfClass1 > numberOfCharactersOfClass2) return false;
-          break;
-        }
-        case Comparator.EqualTo:
-        {
-          if (numberOfCharactersOfClass1 != numberOfCharactersOfClass2) return false;
-          break;
-        }
+        return missionaryCount <= cannibalCount;
       }
+      case GameMode.JealousHusbands:
+        // TODO: implement
+        return true;
     }
-
     return true;
   }
 }

@@ -16,11 +16,21 @@ public class InitialSpawner : MonoBehaviour
 
   private void Start()
   {
-    LoadInitialState();
+    switch (GameManager.Instance.TheRuleEngine.TheGameMode)
+    {
+      case GameMode.MissionariesAndCannibals:
+        LoadInitialStateForMissionariesAndCannibals();
+        break;
+      case GameMode.JealousHusbands:
+        LoadInitialStateForJealousHusbands();
+        break;
+    }
   }
 
-  private void LoadInitialState()
+  private void LoadInitialStateForMissionariesAndCannibals()
   {
+    FlushAllCharacters();
+
     string initialState = "MMMCCC_";
 
     GameManager gameManager = GameManager.Instance;
@@ -45,6 +55,45 @@ public class InitialSpawner : MonoBehaviour
           break;
         }
       }
+    }
+  }
+
+  private void LoadInitialStateForJealousHusbands()
+  {
+    FlushAllCharacters();
+
+    string initialState = "MMMCCC_";
+
+    GameManager gameManager = GameManager.Instance;
+    RiverBankSide side = RiverBankSide.Left;
+    for (int i = 0; i < initialState.Length; ++i)
+    {
+      switch (initialState[i])
+      {
+        case '_':
+        {
+          side = RiverBankSide.Right;
+          break;
+        }
+        case 'M':
+        {
+          Character character = SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, side, i);
+          break;
+        }
+        case 'C':
+        {
+          Character character = SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, side, i);
+          break;
+        }
+      }
+    }
+  }
+
+  private void FlushAllCharacters()
+  {
+    foreach (GameObject character in GameObject.FindGameObjectsWithTag("Characters"))
+    {
+      GameObject.Destroy(character);
     }
   }
 
