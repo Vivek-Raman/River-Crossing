@@ -10,20 +10,22 @@ public class CharacterClassPrefabDirectory : ScriptableObject
 {
   [SerializeField] private List<CharacterClassPrefab> directory;
 
-  private Dictionary<CharacterClass, GameObject> map = null;
+  private Dictionary<string, GameObject> map = null;
 
   public void Init()
   {
-    map = new Dictionary<CharacterClass, GameObject>();
+    map = new Dictionary<string, GameObject>();
     foreach (CharacterClassPrefab entry in directory)
     {
-      map.Add(entry.CharacterClass, entry.Prefab);
+      string key = entry.CharacterClass.ToString() + entry.Qualifier.ToString();
+      map.Add(key, entry.Prefab);
     }
   }
 
-  public GameObject GetPrefabForCharacterClass(CharacterClass characterClass)
+  public GameObject GetPrefabForCharacterClassAndQualifier(CharacterClass characterClass, int qualifier)
   {
-    if (!map.TryGetValue(characterClass, out GameObject value))
+    string key = characterClass.ToString() + qualifier.ToString();
+    if (!map.TryGetValue(key, out GameObject value))
     {
       throw new KeyNotFoundException(characterClass.ToString());
     }

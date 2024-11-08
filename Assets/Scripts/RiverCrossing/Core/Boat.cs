@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.States;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -13,6 +15,7 @@ public class Boat : MonoBehaviour
   [SerializeField] private Transform rightWaypoint;
 
   public RiverBankSide CurrentSide { get; private set; } = RiverBankSide.Left;
+  public List<Character> CharactersOnBoard => charactersOnBoard.Values.ToList();
 
   private GameManager gameManager = null;
   private Transform leftAnchor = null;
@@ -105,8 +108,9 @@ public class Boat : MonoBehaviour
         break;
     }
 
-    bool valid = gameManager.TheRuleEngine.TryValidateRules();
-    Debug.Log("Setup valid: " + valid);
+    bool valid = gameManager.TheRuleEngine.TryValidateRules(this);
+    // TODO: remove debug UI
+    GameObject.Find("Debug Text").GetComponent<TMP_Text>().text = "Valid: " + valid.ToString();
   }
 }
 }

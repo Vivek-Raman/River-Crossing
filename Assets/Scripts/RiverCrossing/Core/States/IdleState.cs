@@ -11,6 +11,7 @@ public class IdleState : State
   {
     GameManager.Instance.CanBoatMove = true;
     GameManager.Instance.CanBoardBoat = true;
+    GameManager.Instance.TheRuleEngine.ShouldEvaluateRules = true;
 
     yield break;
   }

@@ -1,4 +1,6 @@
-﻿using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using System.Collections.Generic;
+using dev.vivekraman.RiverCrossing.Core.Enums;
+using TMPro;
 using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.Core.Rules
@@ -6,33 +8,37 @@ namespace dev.vivekraman.RiverCrossing.Core.Rules
 public class RuleEngine : MonoBehaviour
 {
   public bool ShouldEvaluateRules { get; set; } = true;
-  public GameMode TheGameMode => gameMode;
+  public GameMode TheGameMode { get; set; } = GameMode.Null;
 
-  [SerializeField] private GameMode gameMode = GameMode.MissionariesAndCannibals;
-
-  public bool TryValidateRules()
+  public bool TryValidateRules(Boat boat)
   {
     if (!ShouldEvaluateRules) return true;
     bool valid = true;
 
     GameManager gameManager = GameManager.Instance;
     RiverBank leftBank = gameManager.GetRiverBank(RiverBankSide.Left);
-    valid = RunRulesOnRiverBank(leftBank);
+    valid = RunRulesOnRiverBank(boat, leftBank);
     if (!valid) return false;
     RiverBank rightBank = gameManager.GetRiverBank(RiverBankSide.Right);
-    valid = RunRulesOnRiverBank(rightBank);
+    valid = RunRulesOnRiverBank(boat, rightBank);
     return valid;
   }
 
-  private bool RunRulesOnRiverBank(RiverBank riverBank)
+  private bool RunRulesOnRiverBank(Boat boat, RiverBank riverBank)
   {
-    switch (gameMode)
+    switch (TheGameMode)
     {
       case GameMode.MissionariesAndCannibals:
       {
         int missionaryCount = 0;
         int cannibalCount = 0;
-        foreach (Character character in riverBank.FetchBankedCharacters())
+        List<Character> characters = new List<Character>(riverBank.FetchBankedCharacters());
+        if (boat.CurrentSide == riverBank.Side)
+        {
+          // if boat is on this side, evaluate rules such that the characters onboard are on the bank itself
+          characters.AddRange(boat.CharactersOnBoard);
+        }
+        foreach (Character character in characters)
         {
           switch (character.TheCharacterClass)
           {
@@ -45,11 +51,21 @@ public class RuleEngine : MonoBehaviour
           }
         }
 
-        return missionaryCount <= cannibalCount;
+        return missionaryCount == 0 || cannibalCount == 0 || missionaryCount >= cannibalCount;
       }
       case GameMode.JealousHusbands:
+      {
+        List<Character> characters = new List<Character>(riverBank.FetchBankedCharacters());
+        if (boat.CurrentSide == riverBank.Side)
+        {
+          // if boat is on this side, evaluate rules such that the characters onboard are on the bank itself
+          characters.AddRange(boat.CharactersOnBoard);
+        }
+
+        // foreach (Character character in characters)
         // TODO: implement
-        return true;
+          return true;
+      }
     }
     return true;
   }

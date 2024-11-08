@@ -8,9 +8,11 @@ namespace dev.vivekraman.RiverCrossing.Core.Spawner
 public class CharacterClassPrefab
 {
   public CharacterClass CharacterClass => characterClass;
+  public int Qualifier => qualifier;
   public GameObject Prefab => prefab;
 
   [SerializeField] private CharacterClass characterClass;
+  [SerializeField] private int qualifier;
   [SerializeField] private GameObject prefab;
 }
 }

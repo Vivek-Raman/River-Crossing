@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using dev.vivekraman.RiverCrossing.Utils.StateManagement;
+using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.Core.States
 {
@@ -24,6 +25,7 @@ public class MainMenuState : State
 
     gameManager.TheUIController.SetMainMenuUIState(false);
     gameManager.TheCameraController.FocusGameplay();
+    yield return new WaitForSeconds(1);
     yield break;
   }
 }

@@ -14,6 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   directory:
   - characterClass: 1
+    qualifier: 0
     prefab: {fileID: 6688870459479152913, guid: 236e325f27cae0e498c6ac66236586f4, type: 3}
   - characterClass: 2
+    qualifier: 0
     prefab: {fileID: 2372437034924734277, guid: 4af1d0933bbdaa64cb14dda3c1473dae, type: 3}
+  - characterClass: 3
+    qualifier: 1
+    prefab: {fileID: 910540001610113331, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
+  - characterClass: 3
+    qualifier: 2
+    prefab: {fileID: 7266419308443843719, guid: 15d6e31c98f3631478b663a056d3606a, type: 3}
+  - characterClass: 3
+    qualifier: 3
+    prefab: {fileID: 8270180161961502857, guid: 783afe790f096dd4a819cc03aee66eb8, type: 3}
+  - characterClass: 4
+    qualifier: 1
+    prefab: {fileID: 3336599749225008226, guid: 7c882c362a592714a9e095add7803545, type: 3}
+  - characterClass: 4
+    qualifier: 2
+    prefab: {fileID: 762360269237568384, guid: d7123f17991cd1244a3200ff772917d8, type: 3}
+  - characterClass: 4
+    qualifier: 3
+    prefab: {fileID: 5872707220566714449, guid: 57e8e41b336bfa240ae4d81046c24b5c, type: 3}

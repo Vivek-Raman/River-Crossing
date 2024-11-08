@@ -19,7 +19,7 @@ public abstract class StateManager : MonoBehaviour
 
     if (!states.TryGetValue(stateName, out State newState))
     {
-      Debug.LogError("State " + stateName + "not registered");
+      // Debug.LogError("State " + stateName + "not registered");
       return;
     }
 
