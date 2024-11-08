@@ -56,8 +56,9 @@ public class Boat : MonoBehaviour
       charactersOnBoard.Remove(BoatSide.Left);
       character.transform.SetParent(null);
       gameManager.StateManager.SetState(nameof(CharacterBoardingState));
-      character.transform.DOLocalMove(
-        gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(character).position, 1f);
+      character.transform.DOLocalJump(
+        gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(character).position,
+        1f, 1, 1f);
     }
     else if (charactersOnBoard.TryGetValue(BoatSide.Right, out Character rightCharacter) &&
              rightCharacter.Name == character.Name)
@@ -67,8 +68,9 @@ public class Boat : MonoBehaviour
       character.Side = CurrentSide;
       character.transform.SetParent(null);
       gameManager.StateManager.SetState(nameof(CharacterBoardingState));
-      character.transform.DOLocalMove(
-        gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(character).position, 1f);
+      character.transform.DOLocalJump(
+        gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(character).position,
+        1f, 1, 1f);
     }
     else
     {
@@ -81,7 +83,7 @@ public class Boat : MonoBehaviour
       charactersOnBoard.Add(side, character);
       Transform anchor = side == BoatSide.Left ? leftAnchor : rightAnchor;
       character.transform.SetParent(anchor);
-      character.transform.DOLocalMove(Vector3.zero, 1f);
+      character.transform.DOLocalJump(Vector3.zero, 1f, 1, 1f);
     }
   }
 
