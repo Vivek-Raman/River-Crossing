@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
   public CharacterClass TheCharacterClass => characterClass;
 
   [SerializeField] private CharacterClass characterClass = CharacterClass.Null;
+  [SerializeField] private int qualifier = 0;
 
   private void OnMouseDown()
   {

@@ -5,5 +5,7 @@ public enum CharacterClass
   Null,
   Missionary,
   Cannibal,
+  Wife,
+  Husband,
 }
 }
