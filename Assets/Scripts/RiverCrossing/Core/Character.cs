@@ -1,7 +1,5 @@
-﻿using System;
-using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using dev.vivekraman.RiverCrossing.Core.Enums;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace dev.vivekraman.RiverCrossing.Core
 {
@@ -17,9 +15,8 @@ public class Character : MonoBehaviour
 
   private void Start()
   {
-    if (characterClass == CharacterClass.Cannibal) return;
     Animator animator = this.GetComponentInChildren<Animator>();
-    animator.SetFloat("AnimOffset", Random.Range(-1f, 1f));
+    animator.SetFloat("AnimOffset", Random.Range(-2f, 2f));
   }
 
   private void OnMouseDown()

@@ -1,7 +1,6 @@
-﻿using System;
-using dev.vivekraman.RiverCrossing.Core.Enums;
-using NUnit.Framework;
+﻿using dev.vivekraman.RiverCrossing.Core.Enums;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace dev.vivekraman.RiverCrossing.Core.Spawner
 {
@@ -13,11 +12,6 @@ public class InitialSpawner : MonoBehaviour
   {
     Assert.IsNotNull(directory);
     directory.Init();
-  }
-
-  private void Start()
-  {
-    LoadInitialStateForMissionariesAndCannibals();
   }
 
   public void LoadInitialStateForGameMode(GameMode gameMode)

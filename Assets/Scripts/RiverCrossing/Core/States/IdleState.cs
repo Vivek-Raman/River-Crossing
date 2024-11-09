@@ -9,9 +9,10 @@ public class IdleState : State
 
   public override IEnumerator OnStateEnter()
   {
-    GameManager.Instance.CanBoatMove = true;
-    GameManager.Instance.CanBoardBoat = true;
-    GameManager.Instance.TheRuleEngine.ShouldEvaluateRules = true;
+    GameManager gameManager = GameManager.Instance;
+    gameManager.CanBoatMove = true;
+    gameManager.CanBoardBoat = true;
+    gameManager.TheRuleEngine.ShouldEvaluateRules = true;
 
     yield break;
   }

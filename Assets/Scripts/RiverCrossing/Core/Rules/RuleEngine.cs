@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using dev.vivekraman.RiverCrossing.Core.Enums;
-using TMPro;
 using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.Core.Rules
