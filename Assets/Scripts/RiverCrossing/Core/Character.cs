@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
   public string Name => characterClass + ' ' + name;
   public RiverBankSide Side { get; set; } = RiverBankSide.Left;
   public CharacterClass TheCharacterClass => characterClass;
+  public int Qualifier => qualifier;
 
   [SerializeField] private CharacterClass characterClass = CharacterClass.Null;
   [SerializeField] private int qualifier = 0;

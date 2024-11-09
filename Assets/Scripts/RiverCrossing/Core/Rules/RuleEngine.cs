@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using TMPro;
 using UnityEngine;
@@ -62,9 +63,35 @@ public class RuleEngine : MonoBehaviour
           characters.AddRange(boat.CharactersOnBoard);
         }
 
-        // foreach (Character character in characters)
-        // TODO: implement
-          return true;
+        for (int i = 0; i < characters.Count; i++)
+        {
+          if (characters[i].TheCharacterClass == CharacterClass.Husband) continue;
+
+          if (characters[i].TheCharacterClass == CharacterClass.Wife)
+          {
+            bool atRisk = false;
+            for (int j = 0; j < characters.Count; j++)
+            {
+              if (characters[j].TheCharacterClass != CharacterClass.Husband) continue;
+              if (characters[j].Qualifier == characters[i].Qualifier)
+              {
+                atRisk = false;
+                break;
+              }
+              else
+              {
+                atRisk = true;
+              }
+            }
+
+            if (atRisk)
+            {
+              return false;
+            }
+          }
+        }
+
+        return true;
       }
     }
     return true;
