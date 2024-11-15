@@ -111,6 +111,15 @@ public class Boat : MonoBehaviour
     }
 
     bool valid = gameManager.TheRuleEngine.TryValidateRules(this);
+    if (valid)
+    {
+      gameManager.TheScoreController.AddScore();
+    }
+    else
+    {
+      // gameManager.Fail();
+    }
+
     // TODO: remove debug UI
     GameObject.Find("Debug Text").GetComponent<TMP_Text>().text = "Valid: " + valid.ToString();
   }

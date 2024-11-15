@@ -61,17 +61,19 @@ public class RuleEngine : MonoBehaviour
           characters.AddRange(boat.CharactersOnBoard);
         }
 
-        for (int i = 0; i < characters.Count; i++)
+        foreach (Character wife in characters)
         {
-          if (characters[i].TheCharacterClass == CharacterClass.Husband) continue;
+          if (wife.TheCharacterClass == CharacterClass.Husband) continue;
 
-          if (characters[i].TheCharacterClass == CharacterClass.Wife)
+          if (wife.TheCharacterClass == CharacterClass.Wife)
           {
             bool atRisk = false;
-            for (int j = 0; j < characters.Count; j++)
+            foreach (Character otherHusband in characters)
             {
-              if (characters[j].TheCharacterClass != CharacterClass.Husband) continue;
-              if (characters[j].Qualifier == characters[i].Qualifier)
+              // ignore all wives
+              if (otherHusband.TheCharacterClass != CharacterClass.Husband) continue;
+
+              if (otherHusband.Qualifier == wife.Qualifier)
               {
                 atRisk = false;
                 break;
@@ -82,10 +84,7 @@ public class RuleEngine : MonoBehaviour
               }
             }
 
-            if (atRisk)
-            {
-              return false;
-            }
+            return atRisk;
           }
         }
 
