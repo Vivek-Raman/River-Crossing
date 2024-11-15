@@ -10,22 +10,30 @@ public class UIController : MonoBehaviour
 {
   [SerializeField] private GameObject mainMenuPanel = null;
   [SerializeField] private GameObject gameplayHudPanel = null;
+  [SerializeField] private GameObject gameOverPanel = null;
 
   private void Awake()
   {
     Assert.IsNotNull(mainMenuPanel);
     Assert.IsNotNull(gameplayHudPanel);
+    Assert.IsNotNull(gameOverPanel);
   }
 
   private void Start()
   {
     UI_SwitchGameModeToMissionariesAndCannibals();
+    gameOverPanel.SetActive(false);
   }
 
   public void SetMainMenuUIState(bool visible)
   {
     mainMenuPanel.SetActive(visible);
     gameplayHudPanel.SetActive(!visible);
+  }
+
+  public void ShowGameOverPanel()
+  {
+    gameOverPanel.SetActive(true);
   }
 
   public void UI_PlayGame()

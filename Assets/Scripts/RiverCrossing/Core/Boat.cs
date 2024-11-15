@@ -3,7 +3,6 @@ using System.Linq;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.States;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -117,11 +116,8 @@ public class Boat : MonoBehaviour
     }
     else
     {
-      // gameManager.Fail();
+      gameManager.StateManager.SetState(nameof(GameOverState));
     }
-
-    // TODO: remove debug UI
-    GameObject.Find("Debug Text").GetComponent<TMP_Text>().text = "Valid: " + valid.ToString();
   }
 }
 }
