@@ -5,6 +5,8 @@ namespace dev.vivekraman.RiverCrossing.Utils.StateManagement
 {
 public abstract class StateManager : MonoBehaviour
 {
+  public State CurrentState => currentState;
+
   private Dictionary<string, State> states = new Dictionary<string, State>();
   private State currentState = null;
 
@@ -19,12 +21,22 @@ public abstract class StateManager : MonoBehaviour
 
     if (!states.TryGetValue(stateName, out State newState))
     {
-      // Debug.LogError("State " + stateName + "not registered");
+      Debug.LogError("State " + stateName + "not registered");
       return;
     }
 
     if (currentState != null)
     {
+      if (!currentState.CanExitState())
+      {
+        Debug.LogWarning("Cannot leave state: " + currentState.Name);
+        return;
+      }
+      if (!newState.CanEnterState())
+      {
+        Debug.LogWarning("Cannot enter state: " + newState.Name);
+        return;
+      }
       // Debug.Log("Leaving state: " + currentState.Name);
       StartCoroutine(currentState.OnStateExit());
     }

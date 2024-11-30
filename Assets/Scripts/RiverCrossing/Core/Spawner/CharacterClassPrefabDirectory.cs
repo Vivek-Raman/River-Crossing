@@ -24,6 +24,7 @@ public class CharacterClassPrefabDirectory : ScriptableObject
 
   public GameObject GetPrefabForCharacterClassAndQualifier(CharacterClass characterClass, int qualifier)
   {
+    // if (!initialized) Init();
     string key = characterClass.ToString() + qualifier.ToString();
     if (!map.TryGetValue(key, out GameObject value))
     {

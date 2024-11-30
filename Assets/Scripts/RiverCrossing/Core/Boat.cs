@@ -119,5 +119,36 @@ public class Boat : MonoBehaviour
       gameManager.StateManager.SetState(nameof(GameOverState));
     }
   }
+
+  public void ForceBoatToBank(RiverBankSide side)
+  {
+    switch (side)
+    {
+      case RiverBankSide.Left:
+        this.transform.position = leftWaypoint.position;
+        break;
+      case RiverBankSide.Right:
+        this.transform.position = rightWaypoint.position;
+        break;
+    }
+  }
+
+  public void ForceAlightAll()
+  {
+    if (charactersOnBoard.TryGetValue(BoatSide.Left, out Character left))
+    {
+      left.transform.position = gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(left).position;
+      left.Side = CurrentSide;
+      left.transform.SetParent(null);
+      charactersOnBoard.Remove(BoatSide.Left);
+    }
+    if (charactersOnBoard.TryGetValue(BoatSide.Right, out Character right))
+    {
+      right.transform.position = gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(right).position;
+      right.Side = CurrentSide;
+      right.transform.SetParent(null);
+      charactersOnBoard.Remove(BoatSide.Right);
+    }
+  }
 }
 }

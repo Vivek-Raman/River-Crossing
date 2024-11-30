@@ -8,6 +8,7 @@ public class RiverCrossingStateManager : StateManager
   {
     base.RegisterState(new MainMenuState());
     base.RegisterState(new IdleState());
+    base.RegisterState(new SolveState());
     base.RegisterState(new CharacterBoardingState());
     base.RegisterState(new BoatTraversingState());
     base.RegisterState(new GameOverState());

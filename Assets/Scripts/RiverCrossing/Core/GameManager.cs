@@ -3,6 +3,7 @@ using dev.vivekraman.RiverCrossing.Core.Cameras;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.Rules;
 using dev.vivekraman.RiverCrossing.Core.Score;
+using dev.vivekraman.RiverCrossing.Core.Solver;
 using dev.vivekraman.RiverCrossing.Core.Spawner;
 using dev.vivekraman.RiverCrossing.Core.States;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace dev.vivekraman.RiverCrossing.Core
 [RequireComponent(typeof(CameraController))]
 [RequireComponent(typeof(UIController))]
 [RequireComponent(typeof(ScoreController))]
+[RequireComponent(typeof(GameSolver))]
 public class GameManager : MonoBehaviour
 {
   public static GameManager Instance { get; private set; } = null;
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
   public CameraController TheCameraController { get; private set; } = null;
   public UIController TheUIController { get; private set; } = null;
   public ScoreController TheScoreController { get; private set; } = null;
+  public GameSolver Solver { get; private set; } = null;
 
   [SerializeField] private Boat boat = null;
 
@@ -52,6 +55,7 @@ public class GameManager : MonoBehaviour
     TheCameraController = this.GetComponent<CameraController>();
     TheUIController = this.GetComponent<UIController>();
     TheScoreController = this.GetComponent<ScoreController>();
+    Solver = this.GetComponent<GameSolver>();
 
     Assert.IsNotNull(StateManager);
     Assert.IsNotNull(TheRuleEngine);
@@ -59,6 +63,7 @@ public class GameManager : MonoBehaviour
     Assert.IsNotNull(TheCameraController);
     Assert.IsNotNull(TheUIController);
     Assert.IsNotNull(TheScoreController);
+    Assert.IsNotNull(Solver);
 
     Assert.IsNotNull(boat);
   }
