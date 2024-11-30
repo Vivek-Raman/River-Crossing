@@ -106,7 +106,6 @@ public class GameSolver : BaseSpawner
   {
     GameManager gameManager = GameManager.Instance;
 
-
     if (!solution.TryGetValue((index + increment).ToString(), out MnCStage nextStage))
     {
       return;

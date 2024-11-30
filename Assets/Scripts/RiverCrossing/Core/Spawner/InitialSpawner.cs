@@ -1,5 +1,4 @@
-﻿using System;
-using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using dev.vivekraman.RiverCrossing.Core.Enums;
 
 namespace dev.vivekraman.RiverCrossing.Core.Spawner
 {

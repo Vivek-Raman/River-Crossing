@@ -1,7 +1,5 @@
 ﻿using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.States;
-using dev.vivekraman.RiverCrossing.Utils.StateManagement;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
@@ -41,6 +39,8 @@ public class UIController : MonoBehaviour
   public void ShowGameOverPanel()
   {
     gameOverPanel.SetActive(true);
+    solutionViewerPanel.SetActive(false);
+    solveButton.SetActive(false);
   }
 
   public void SetLoaderUIState(bool active)
