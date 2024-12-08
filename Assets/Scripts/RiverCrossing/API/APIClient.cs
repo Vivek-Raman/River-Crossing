@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using dev.vivekraman.RiverCrossing.API.Request;
 using dev.vivekraman.RiverCrossing.API.Response;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -9,30 +11,45 @@ namespace dev.vivekraman.RiverCrossing.API
 {
 public static class APIClient
 {
-  public static IEnumerator FetchMnCSolution(MnCStage currentStage, Action<MnCSolutionResponse> onSuccess)
+  public static IEnumerator FetchMnCSolution(MnCSolveRequest request, Action<Dictionary<string, MnCStage>> onSuccess)
   {
-    using (UnityWebRequest webRequest = UnityWebRequest.Post("https://vivekraman.dev/backend/river-crossing/solve",
-             JsonUtility.ToJson(currentStage), "application/json"))
+    request.M_total = 3;
+    request.C_total = 3;
+    request.M_left = 3;
+    request.C_left = 3;
+    request.M_right = 0;
+    request.C_right = 0;
+    request.boat_position = "left";
+    request.solver = "a_star";
+
+    using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/missionary-cannibal",
+             JsonUtility.ToJson(request), "application/json"))
     {
-      // TODO: call API
-      // yield return webRequest.SendWebRequest();
-      yield return new WaitForSeconds(2f);
+      yield return www.SendWebRequest();
 
-      MnCSolutionResponse response = JsonConvert.DeserializeObject<MnCSolutionResponse>("{ \"output\": {" +
-          "\"0\":  {\"M_left\": 3, \"C_left\": 3, \"M_right\": 0, \"C_right\": 0, \"boat_position\": \"left\"}," +
-          "\"1\":  {\"M_left\": 3, \"C_left\": 1, \"M_right\": 0, \"C_right\": 2, \"boat_position\": \"right\"}," +
-          "\"2\":  {\"M_left\": 3, \"C_left\": 2, \"M_right\": 0, \"C_right\": 1, \"boat_position\": \"left\"}," +
-          "\"3\":  {\"M_left\": 3, \"C_left\": 0, \"M_right\": 0, \"C_right\": 3, \"boat_position\": \"right\"}," +
-          "\"4\":  {\"M_left\": 3, \"C_left\": 1, \"M_right\": 0, \"C_right\": 2, \"boat_position\": \"left\"}," +
-          "\"5\":  {\"M_left\": 1, \"C_left\": 1, \"M_right\": 2, \"C_right\": 2, \"boat_position\": \"right\"}," +
-          "\"6\":  {\"M_left\": 2, \"C_left\": 2, \"M_right\": 1, \"C_right\": 1, \"boat_position\": \"left\"}," +
-          "\"7\":  {\"M_left\": 0, \"C_left\": 2, \"M_right\": 3, \"C_right\": 1, \"boat_position\": \"right\"}," +
-          "\"8\":  {\"M_left\": 0, \"C_left\": 3, \"M_right\": 3, \"C_right\": 0, \"boat_position\": \"left\"}," +
-          "\"9\":  {\"M_left\": 0, \"C_left\": 1, \"M_right\": 3, \"C_right\": 2, \"boat_position\": \"right\"}," +
-          "\"10\": {\"M_left\": 1, \"C_left\": 1, \"M_right\": 2, \"C_right\": 2, \"boat_position\": \"left\"}," +
-          "\"11\": {\"M_left\": 0, \"C_left\": 0, \"M_right\": 3, \"C_right\": 3, \"boat_position\": \"right\"}" +
-      "}}");
+      Dictionary<string, MnCStage> response =
+        JsonConvert.DeserializeObject<Dictionary<string, MnCStage>>(www.downloadHandler.text);
+      onSuccess?.Invoke(response);
+    }
+  }
 
+  public static IEnumerator FetchJHSolution(JHSolveRequest request, Action<Dictionary<string, JHStage>> onSuccess)
+  {
+    request.num_of_couples = 3;
+    request.solver = "a_star";
+
+    using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/jealous-husband",
+             JsonUtility.ToJson(request), "application/json"))
+    {
+      yield return www.SendWebRequest();
+
+      Dictionary<string, JHStageRaw> rawResponse =
+        JsonConvert.DeserializeObject<Dictionary<string, JHStageRaw>>(www.downloadHandler.text);
+      Dictionary<string, JHStage> response = new ();
+      foreach ((string key, JHStageRaw val) in rawResponse)
+      {
+        response[key] = JHStage.FromRaw(val);
+      }
       onSuccess?.Invoke(response);
     }
   }

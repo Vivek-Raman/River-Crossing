@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using dev.vivekraman.RiverCrossing.API;
+using dev.vivekraman.RiverCrossing.API.Request;
 using dev.vivekraman.RiverCrossing.API.Response;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.Spawner;
@@ -9,7 +11,8 @@ namespace dev.vivekraman.RiverCrossing.Core.Solver
 {
 public class GameSolver : BaseSpawner
 {
-  private Dictionary<string, MnCStage> solution = null;
+  private Dictionary<string, MnCStage> solutionMnC = null;
+  private Dictionary<string, JHStage> solutionJH = null;
   private int index = 0;
   private bool loading = false;
 
@@ -62,10 +65,11 @@ public class GameSolver : BaseSpawner
 
     loading = true;
     gameManager.TheUIController.SetLoaderUIState(loading);
-    StartCoroutine(APIClient.FetchMnCSolution(currentStage, OnMnCSolutionReceived));
+    MnCSolveRequest request = new();
+    StartCoroutine(APIClient.FetchMnCSolution(request, OnMnCSolutionReceived));
   }
 
-  private void OnMnCSolutionReceived(MnCSolutionResponse response)
+  private void OnMnCSolutionReceived(Dictionary<string, MnCStage> response)
   {
     loading = false;
     GameManager.Instance.TheUIController.SetLoaderUIState(loading);
@@ -75,12 +79,26 @@ public class GameSolver : BaseSpawner
       Debug.LogError("Response is null");
       return;
     }
-    solution = response.output;
+    solutionMnC = response;
   }
 
-  public void SolveJealousHusbands()
+  private void SolveJealousHusbands()
   {
-    throw new System.NotImplementedException();
+    JHSolveRequest request = new();
+    StartCoroutine(APIClient.FetchJHSolution(request, OnJHSolutionReceived));
+  }
+
+  private void OnJHSolutionReceived(Dictionary<string, JHStage> response)
+  {
+    loading = false;
+    GameManager.Instance.TheUIController.SetLoaderUIState(loading);
+    if (response == null)
+    {
+      // TODO: handle error
+      Debug.LogError("Response is null");
+      return;
+    }
+    solutionJH = response;
   }
 
   /// <summary>
@@ -106,7 +124,7 @@ public class GameSolver : BaseSpawner
   {
     GameManager gameManager = GameManager.Instance;
 
-    if (!solution.TryGetValue((index + increment).ToString(), out MnCStage nextStage))
+    if (!solutionMnC.TryGetValue((index + increment).ToString(), out MnCStage nextStage))
     {
       return;
     }
@@ -130,13 +148,65 @@ public class GameSolver : BaseSpawner
       SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Right, counter++);
     }
 
-    gameManager.TheBoat.ForceBoatToBank(nextStage.ParseRiverBankSide());
+    gameManager.TheBoat.ForceBoatToBank(ParseRiverBankSide(nextStage.boat_position));
     index += increment;
   }
 
   private void StepThroughJealousHusbands(int increment)
   {
-    throw new System.NotImplementedException();
+    CharacterClass ParseJH(string c)
+    {
+      switch (c)
+      {
+        case "H":
+          return CharacterClass.Husband;
+        case "W":
+          return CharacterClass.Wife;
+      }
+
+      return CharacterClass.Null;
+    }
+
+    GameManager gameManager = GameManager.Instance;
+
+    if (!solutionJH.TryGetValue((index + increment).ToString(), out JHStage nextStage))
+    {
+      return;
+    }
+
+    FlushAllCharacters();
+    int counter = 0;
+    foreach ((string charClass, HashSet<long> qualifiers) in nextStage.left_bank)
+    {
+      foreach (long qualifier in qualifiers)
+      {
+        SpawnCharacterOnRiverBank(gameManager, ParseJH(charClass), (int) qualifier, RiverBankSide.Left, counter++);
+      }
+    }
+    foreach ((string charClass, HashSet<long> qualifiers) in nextStage.right_bank)
+    {
+      foreach (long qualifier in qualifiers)
+      {
+        SpawnCharacterOnRiverBank(gameManager, ParseJH(charClass), (int)qualifier, RiverBankSide.Right, counter++);
+      }
+    }
+
+    gameManager.TheBoat.ForceBoatToBank(ParseRiverBankSide(nextStage.boat_position));
+    index += increment;
+  }
+
+  private static RiverBankSide ParseRiverBankSide(string boatPos)
+  {
+    foreach (RiverBankSide side in Enum.GetValues(typeof(RiverBankSide)))
+    {
+      if (side.ToString().ToLower() == boatPos.ToLower() ||
+          side.ToString().ToLower()[0] == boatPos.ToLower()[0])
+      {
+        return side;
+      }
+    }
+
+    return RiverBankSide.Null;
   }
 }
 }
