@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
-namespace dev.vivekraman.RiverCrossing.Core
+namespace dev.vivekraman.RiverCrossing.Core.UI
 {
 public class UIController : MonoBehaviour
 {
@@ -12,6 +12,9 @@ public class UIController : MonoBehaviour
   [SerializeField] private GameObject gameplayHudPanel = null;
   [SerializeField] private GameObject gameOverPanel = null;
   [SerializeField] private GameObject solutionViewerPanel = null;
+  [SerializeField] private GameObject loadingPanel = null;
+  [SerializeField] private GameObject configMnCPanel = null;
+  [SerializeField] private GameObject configJHPanel = null;
   [SerializeField] private GameObject solveButton = null;
 
   private void Awake()
@@ -19,8 +22,11 @@ public class UIController : MonoBehaviour
     Assert.IsNotNull(mainMenuPanel);
     Assert.IsNotNull(gameplayHudPanel);
     Assert.IsNotNull(gameOverPanel);
-    Assert.IsNotNull(solveButton);
     Assert.IsNotNull(solutionViewerPanel);
+    // Assert.IsNotNull(loadingPanel); TODO
+    Assert.IsNotNull(configMnCPanel);
+    Assert.IsNotNull(configJHPanel);
+    Assert.IsNotNull(solveButton);
   }
 
   private void Start()
@@ -28,6 +34,8 @@ public class UIController : MonoBehaviour
     UI_SwitchGameModeToMissionariesAndCannibals();
     gameOverPanel.SetActive(false);
     solutionViewerPanel.SetActive(false);
+    configMnCPanel.SetActive(true);
+    configJHPanel.SetActive(false);
   }
 
   public void SetMainMenuUIState(bool visible)
@@ -75,11 +83,15 @@ public class UIController : MonoBehaviour
   public void UI_SwitchGameModeToMissionariesAndCannibals()
   {
     SwitchGameMode(GameMode.MissionariesAndCannibals);
+    configMnCPanel.SetActive(true);
+    configJHPanel.SetActive(false);
   }
 
   public void UI_SwitchGameModeToJealousHusbands()
   {
     SwitchGameMode(GameMode.JealousHusbands);
+    configMnCPanel.SetActive(false);
+    configJHPanel.SetActive(true);
   }
 
   public void UI_SolverStepForward()

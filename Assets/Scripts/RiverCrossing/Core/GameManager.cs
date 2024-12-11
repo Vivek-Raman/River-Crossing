@@ -6,6 +6,7 @@ using dev.vivekraman.RiverCrossing.Core.Score;
 using dev.vivekraman.RiverCrossing.Core.Solver;
 using dev.vivekraman.RiverCrossing.Core.Spawner;
 using dev.vivekraman.RiverCrossing.Core.States;
+using dev.vivekraman.RiverCrossing.Core.UI;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -18,12 +19,15 @@ namespace dev.vivekraman.RiverCrossing.Core
 [RequireComponent(typeof(UIController))]
 [RequireComponent(typeof(ScoreController))]
 [RequireComponent(typeof(GameSolver))]
+[RequireComponent(typeof(ConfigController))]
 public class GameManager : MonoBehaviour
 {
   public static GameManager Instance { get; private set; } = null;
 
   public bool CanBoatMove { get; set; } = true;
   public bool CanBoardBoat { get; set; } = true;
+  public int BoatCapacity { get; set; } = 2;
+  public int CharacterCount { get; set; } = 3;
 
   public Boat TheBoat => boat;
   public RiverCrossingStateManager StateManager { get; private set; } = null;

@@ -13,13 +13,6 @@ public static class APIClient
 {
   public static IEnumerator FetchMnCSolution(MnCSolveRequest request, Action<Dictionary<string, MnCStage>> onSuccess)
   {
-    request.M_total = 3;
-    request.C_total = 3;
-    request.M_left = 3;
-    request.C_left = 3;
-    request.M_right = 0;
-    request.C_right = 0;
-    request.boat_position = "left";
     request.solver = "a_star";
 
     using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/missionary-cannibal",

@@ -3,7 +3,9 @@
 public enum BoatSide
 {
   Null,
-  Left,
-  Right,
+  Left1,
+  Left2,
+  Right1,
+  Right2,
 }
 }

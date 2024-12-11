@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using dev.vivekraman.RiverCrossing.API;
 using dev.vivekraman.RiverCrossing.API.Request;
 using dev.vivekraman.RiverCrossing.API.Response;
@@ -34,18 +35,18 @@ public class GameSolver : BaseSpawner
   {
     GameManager gameManager = GameManager.Instance;
 
-    MnCStage currentStage = new MnCStage();
-    currentStage.boat_position = gameManager.TheBoat.CurrentSide.ToString().ToLower();
+    MnCSolveRequest request = new MnCSolveRequest();
+    request.boat_position = gameManager.TheBoat.CurrentSide.ToString().ToLower();
 
     foreach (Character character in gameManager.GetRiverBank(RiverBankSide.Left).FetchBankedCharacters())
     {
       switch (character.TheCharacterClass)
       {
         case CharacterClass.Cannibal:
-          currentStage.C_left++;
+          request.C_left++;
           break;
         case CharacterClass.Missionary:
-          currentStage.M_left++;
+          request.M_left++;
           break;
       }
     }
@@ -55,17 +56,16 @@ public class GameSolver : BaseSpawner
       switch (character.TheCharacterClass)
       {
         case CharacterClass.Cannibal:
-          currentStage.C_right++;
+          request.C_right++;
           break;
         case CharacterClass.Missionary:
-          currentStage.M_right++;
+          request.M_right++;
           break;
       }
     }
 
     loading = true;
     gameManager.TheUIController.SetLoaderUIState(loading);
-    MnCSolveRequest request = new();
     StartCoroutine(APIClient.FetchMnCSolution(request, OnMnCSolutionReceived));
   }
 
@@ -197,16 +197,9 @@ public class GameSolver : BaseSpawner
 
   private static RiverBankSide ParseRiverBankSide(string boatPos)
   {
-    foreach (RiverBankSide side in Enum.GetValues(typeof(RiverBankSide)))
-    {
-      if (side.ToString().ToLower() == boatPos.ToLower() ||
-          side.ToString().ToLower()[0] == boatPos.ToLower()[0])
-      {
-        return side;
-      }
-    }
-
-    return RiverBankSide.Null;
+    return Enum.GetValues(typeof(RiverBankSide)).Cast<RiverBankSide>()
+      .FirstOrDefault(side => side.ToString().ToLower() == boatPos.ToLower() ||
+                              side.ToString().ToLower()[0] == boatPos.ToLower()[0]);
   }
 }
 }

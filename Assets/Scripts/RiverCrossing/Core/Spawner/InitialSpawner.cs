@@ -23,12 +23,11 @@ public class InitialSpawner : BaseSpawner
 
     GameManager gameManager = GameManager.Instance;
     int index = 0;
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, 0, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, 0, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, 0, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Left, index++);
+    for (int x = 0; x < gameManager.CharacterCount; ++x)
+    {
+      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, 0, RiverBankSide.Left, index++);
+      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Left, index++);
+    }
   }
 
   private void LoadInitialStateForJealousHusbands()
@@ -37,12 +36,11 @@ public class InitialSpawner : BaseSpawner
 
     GameManager gameManager = GameManager.Instance;
     int index = 0;
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Wife, 1, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Husband, 1, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Wife, 2, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Husband, 2, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Wife, 3, RiverBankSide.Left, index++);
-    SpawnCharacterOnRiverBank(gameManager, CharacterClass.Husband, 3, RiverBankSide.Left, index++);
+    for (int q = 0; q < gameManager.CharacterCount; ++q)
+    {
+      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Wife, q + 1, RiverBankSide.Left, index++);
+      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Husband, q + 1, RiverBankSide.Left, index++);
+    }
   }
 }
 }
