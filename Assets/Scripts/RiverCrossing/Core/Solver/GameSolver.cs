@@ -12,8 +12,11 @@ namespace dev.vivekraman.RiverCrossing.Core.Solver
 {
 public class GameSolver : BaseSpawner
 {
+  public TraversalMode Traversal { get; set; } = TraversalMode.BreadthFirst;
   private Dictionary<string, MnCStage> solutionMnC = null;
   private Dictionary<string, JHStage> solutionJH = null;
+
+  private int stateCount = 0;
   private int index = 0;
   private bool loading = false;
 
@@ -35,8 +38,14 @@ public class GameSolver : BaseSpawner
   {
     GameManager gameManager = GameManager.Instance;
 
-    MnCSolveRequest request = new MnCSolveRequest();
-    request.boat_position = gameManager.TheBoat.CurrentSide.ToString().ToLower();
+    MnCSolveRequest request = new MnCSolveRequest
+    {
+      M_total = gameManager.CharacterCount,
+      C_total = gameManager.CharacterCount,
+      boat_capacity = gameManager.BoatCapacity,
+      boat_position = gameManager.TheBoat.CurrentSide.ToString().ToLower(),
+    };
+    request.SetSolver(Traversal);
 
     foreach (Character character in gameManager.GetRiverBank(RiverBankSide.Left).FetchBankedCharacters())
     {
@@ -69,7 +78,7 @@ public class GameSolver : BaseSpawner
     StartCoroutine(APIClient.FetchMnCSolution(request, OnMnCSolutionReceived));
   }
 
-  private void OnMnCSolutionReceived(Dictionary<string, MnCStage> response)
+  private void OnMnCSolutionReceived(MnCSolveResponse response)
   {
     loading = false;
     GameManager.Instance.TheUIController.SetLoaderUIState(loading);
@@ -79,16 +88,52 @@ public class GameSolver : BaseSpawner
       Debug.LogError("Response is null");
       return;
     }
-    solutionMnC = response;
+    solutionMnC = response.output;
+    stateCount = response.number_of_states;
   }
 
   private void SolveJealousHusbands()
   {
-    JHSolveRequest request = new();
+    GameManager gameManager = GameManager.Instance;
+    JHSolveRequest request = new()
+    {
+      num_of_couples = gameManager.CharacterCount,
+      boat_capacity = gameManager.BoatCapacity,
+    };
+    request.SetSolver(gameManager.Solver.Traversal);
+
+    List<Character> leftCharacters = gameManager.GetRiverBank(RiverBankSide.Left).FetchBankedCharacters();
+    List<Character> rightCharacters = gameManager.GetRiverBank(RiverBankSide.Right).FetchBankedCharacters();
+    request.stage = new JHStageRaw
+    {
+      boat_position = gameManager.TheBoat.CurrentSide.ToString().ToUpper()[..1],
+      left_bank = new object[leftCharacters.Count][],
+      right_bank = new object[rightCharacters.Count][],
+    };
+
+    int count = 0;
+    foreach (Character character in leftCharacters)
+    {
+      request.stage.left_bank[count++] = new object[]
+      {
+        character.TheCharacterClass.ToString()[0],
+        character.Qualifier,
+      };
+    }
+    count = 0;
+    foreach (Character character in rightCharacters)
+    {
+      request.stage.right_bank[count++] = new object[]
+      {
+        character.TheCharacterClass.ToString()[0],
+        character.Qualifier,
+      };
+    }
+
     StartCoroutine(APIClient.FetchJHSolution(request, OnJHSolutionReceived));
   }
 
-  private void OnJHSolutionReceived(Dictionary<string, JHStage> response)
+  private void OnJHSolutionReceived(JHSolveResponse response)
   {
     loading = false;
     GameManager.Instance.TheUIController.SetLoaderUIState(loading);
@@ -98,7 +143,8 @@ public class GameSolver : BaseSpawner
       Debug.LogError("Response is null");
       return;
     }
-    solutionJH = response;
+    solutionJH = response.parsedOutput;
+    stateCount = response.number_of_states;
   }
 
   /// <summary>

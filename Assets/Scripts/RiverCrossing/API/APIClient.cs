@@ -11,37 +11,31 @@ namespace dev.vivekraman.RiverCrossing.API
 {
 public static class APIClient
 {
-  public static IEnumerator FetchMnCSolution(MnCSolveRequest request, Action<Dictionary<string, MnCStage>> onSuccess)
+  public static IEnumerator FetchMnCSolution(MnCSolveRequest request, Action<MnCSolveResponse> onSuccess)
   {
-    request.solver = "a_star";
-
     using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/missionary-cannibal",
              JsonUtility.ToJson(request), "application/json"))
     {
       yield return www.SendWebRequest();
 
-      Dictionary<string, MnCStage> response =
-        JsonConvert.DeserializeObject<Dictionary<string, MnCStage>>(www.downloadHandler.text);
+      MnCSolveResponse response = JsonConvert.DeserializeObject<MnCSolveResponse>(www.downloadHandler.text);
       onSuccess?.Invoke(response);
     }
   }
 
-  public static IEnumerator FetchJHSolution(JHSolveRequest request, Action<Dictionary<string, JHStage>> onSuccess)
+  public static IEnumerator FetchJHSolution(JHSolveRequest request, Action<JHSolveResponse> onSuccess)
   {
-    request.num_of_couples = 3;
-    request.solver = "a_star";
-
     using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/jealous-husband",
              JsonUtility.ToJson(request), "application/json"))
     {
       yield return www.SendWebRequest();
 
-      Dictionary<string, JHStageRaw> rawResponse =
-        JsonConvert.DeserializeObject<Dictionary<string, JHStageRaw>>(www.downloadHandler.text);
-      Dictionary<string, JHStage> response = new ();
-      foreach ((string key, JHStageRaw val) in rawResponse)
+      JHSolveResponse response =
+        JsonConvert.DeserializeObject<JHSolveResponse>(www.downloadHandler.text);
+      response.parsedOutput = new Dictionary<string, JHStage>();
+      foreach ((string key, JHStageRaw val) in response.output)
       {
-        response[key] = JHStage.FromRaw(val);
+        response.parsedOutput[key] = JHStage.FromRaw(val);
       }
       onSuccess?.Invoke(response);
     }

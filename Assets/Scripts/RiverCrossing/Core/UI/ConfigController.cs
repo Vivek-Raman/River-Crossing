@@ -24,6 +24,7 @@ public class ConfigController : MonoBehaviour
   {
     UI_BoatCapacityChanged(2);
     UI_CharacterCountChanged(3);
+    UI_TraversalMethodChanged(0);
   }
 
   public void UI_BoatCapacityChanged(float value)
@@ -59,6 +60,12 @@ public class ConfigController : MonoBehaviour
         break;
     }
     gameManager.Spawner.LoadInitialStateForGameMode(gameManager.TheRuleEngine.TheGameMode);
+  }
+
+  public void UI_TraversalMethodChanged(int value)
+  {
+    GameManager gameManager = GameManager.Instance;
+    gameManager.Solver.Traversal = (TraversalMode) value;
   }
 }
 }
