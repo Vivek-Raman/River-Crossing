@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using dev.vivekraman.RiverCrossing.API;
@@ -20,21 +21,22 @@ public class GameSolver : BaseSpawner
   private int index = 0;
   private bool loading = false;
 
-  public void Solve()
+  public IEnumerator Solve()
   {
+    if (loading) yield break;
     index = 0;
     switch (GameManager.Instance.TheRuleEngine.TheGameMode)
     {
       case GameMode.MissionariesAndCannibals:
-        SolveMissionariesAndCannibals();
+        yield return SolveMissionariesAndCannibals();
         break;
       case GameMode.JealousHusbands:
-        SolveJealousHusbands();
+        yield return SolveJealousHusbands();
         break;
     }
   }
 
-  private void SolveMissionariesAndCannibals()
+  private IEnumerator SolveMissionariesAndCannibals()
   {
     GameManager gameManager = GameManager.Instance;
 
@@ -75,7 +77,7 @@ public class GameSolver : BaseSpawner
 
     loading = true;
     gameManager.TheUIController.SetLoaderUIState(loading);
-    StartCoroutine(APIClient.FetchMnCSolution(request, OnMnCSolutionReceived));
+    yield return APIClient.FetchMnCSolution(request, OnMnCSolutionReceived);
   }
 
   private void OnMnCSolutionReceived(MnCSolveResponse response)
@@ -88,11 +90,17 @@ public class GameSolver : BaseSpawner
       Debug.LogError("Response is null");
       return;
     }
+
+    if (response.output == null)
+    {
+      // no solution exists
+    }
+
     solutionMnC = response.output;
     stateCount = response.number_of_states;
   }
 
-  private void SolveJealousHusbands()
+  private IEnumerator SolveJealousHusbands()
   {
     GameManager gameManager = GameManager.Instance;
     JHSolveRequest request = new()
@@ -130,7 +138,30 @@ public class GameSolver : BaseSpawner
       };
     }
 
-    StartCoroutine(APIClient.FetchJHSolution(request, OnJHSolutionReceived));
+    yield return APIClient.FetchJHSolution(request, OnJHSolutionReceived);
+  }
+
+  public int GetBestSolutionStepCount()
+  {
+    switch (GameManager.Instance.TheRuleEngine.TheGameMode)
+    {
+      case GameMode.MissionariesAndCannibals:
+        return SafeGetSolutionStepCount(solutionMnC);
+      case GameMode.JealousHusbands:
+        return SafeGetSolutionStepCount(solutionJH);
+    }
+
+    return -1;
+
+    int SafeGetSolutionStepCount(ICollection solution)
+    {
+      if (solution == null)
+      {
+        return -1;
+      }
+
+      return solution.Count;
+    }
   }
 
   private void OnJHSolutionReceived(JHSolveResponse response)

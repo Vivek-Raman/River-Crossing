@@ -7,12 +7,14 @@ namespace dev.vivekraman.RiverCrossing.Core.Score
 public class ScoreController : MonoBehaviour
 {
   [SerializeField] private TMP_Text scoreText;
+  [SerializeField] private TMP_Text targetText;
 
   private int score = 0;
 
   private void Awake()
   {
     Assert.IsNotNull(scoreText);
+    Assert.IsNotNull(targetText);
   }
 
   private void Start()
@@ -24,6 +26,11 @@ public class ScoreController : MonoBehaviour
   {
     score += toAdd;
     UpdateScoreDisplay();
+  }
+
+  public void UpdateTargetDisplay()
+  {
+    targetText.text = "Target: " + GameManager.Instance.Solver.GetBestSolutionStepCount().ToString();
   }
 
   private void UpdateScoreDisplay()

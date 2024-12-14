@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Husband5 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1295375182840231478, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
+      propertyPath: qualifier
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295375182840231478, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
+      propertyPath: characterClass
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7543399734393382577, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.824
@@ -55,6 +63,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3514716820812218384, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
+    - {fileID: 9042686142319104211, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7543399734393382577, guid: b6da980536cc1ba4dac88b05ed51664a, type: 3}
       insertIndex: -1
@@ -74,6 +83,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3501681961926436077}
     m_Modifications:
+    - target: {fileID: 7595469066165485502, guid: 828d7403cdf1dab43bbc81004b7d2d76, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: dd89b8f3bbbb2b1429c692501a7ca736, type: 2}
     - target: {fileID: 7595469066174958640, guid: 828d7403cdf1dab43bbc81004b7d2d76, type: 3}
       propertyPath: m_Name
       value: Male Variant

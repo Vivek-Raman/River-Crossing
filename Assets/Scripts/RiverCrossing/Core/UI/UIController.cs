@@ -1,4 +1,6 @@
-﻿using dev.vivekraman.RiverCrossing.Core.Enums;
+﻿using System.Collections;
+using System.Collections.Generic;
+using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.States;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -16,6 +18,7 @@ public class UIController : MonoBehaviour
   [SerializeField] private GameObject configMnCPanel = null;
   [SerializeField] private GameObject configJHPanel = null;
   [SerializeField] private GameObject solveButton = null;
+  [SerializeField] private Alert alert = null;
 
   private void Awake()
   {
@@ -27,15 +30,14 @@ public class UIController : MonoBehaviour
     Assert.IsNotNull(configMnCPanel);
     Assert.IsNotNull(configJHPanel);
     Assert.IsNotNull(solveButton);
+    Assert.IsNotNull(alert);
   }
 
   private void Start()
   {
-    UI_SwitchGameModeToMissionariesAndCannibals();
+    UI_SwitchGameModeToJealousHusbands();
     gameOverPanel.SetActive(false);
     solutionViewerPanel.SetActive(false);
-    configMnCPanel.SetActive(true);
-    configJHPanel.SetActive(false);
   }
 
   public void SetMainMenuUIState(bool visible)
@@ -65,7 +67,21 @@ public class UIController : MonoBehaviour
 
   public void UI_PlayGame()
   {
-    GameManager.Instance.StateManager.SetState(nameof(IdleState));
+    StartCoroutine(DoPlayGame());
+  }
+
+  private IEnumerator DoPlayGame()
+  {
+    GameManager gameManager = GameManager.Instance;
+    yield return gameManager.Solver.Solve();
+    if (gameManager.Solver.GetBestSolutionStepCount() <= 0)
+    {
+      StartCoroutine(alert.Show("Solution does not exist for this configuration. Please reconfigure and try again!"));
+      yield break;
+    }
+
+    gameManager.TheScoreController.UpdateTargetDisplay();
+    gameManager.StateManager.SetState(nameof(IdleState));
   }
 
   public void UI_RestartGame()

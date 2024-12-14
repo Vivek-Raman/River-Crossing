@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterClass: 4
-  qualifier: 5
+  qualifier: 0
 --- !u!136 &990568478032816159
 CapsuleCollider:
   m_ObjectHideFlags: 0

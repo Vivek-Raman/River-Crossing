@@ -16,8 +16,6 @@ public class SolveState : State
     gameManager.TheRuleEngine.ShouldEvaluateRules = false;
     gameManager.TheBoat.ForceAlightAll();
 
-    gameManager.Solver.Solve();
-
     yield break;
   }
 
