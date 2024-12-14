@@ -27,7 +27,7 @@ public class CharacterClassPrefabDirectory : ScriptableObject
     string key = characterClass.ToString() + qualifier.ToString();
     if (!map.TryGetValue(key, out GameObject value))
     {
-      throw new KeyNotFoundException(characterClass.ToString());
+      throw new KeyNotFoundException(key);
     }
 
     return value;
