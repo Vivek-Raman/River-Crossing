@@ -35,8 +35,10 @@ public class GameManager : MonoBehaviour
   public InitialSpawner Spawner { get; private set; } = null;
   public CameraController TheCameraController { get; private set; } = null;
   public UIController TheUIController { get; private set; } = null;
+  public ConfigController Config { get; private set; } = null;
   public ScoreController TheScoreController { get; private set; } = null;
   public GameSolver Solver { get; private set; } = null;
+  public StatsController Stats { get; private set; } = null;
 
   [SerializeField] private Boat boat = null;
 
@@ -58,16 +60,20 @@ public class GameManager : MonoBehaviour
     Spawner = this.GetComponent<InitialSpawner>();
     TheCameraController = this.GetComponent<CameraController>();
     TheUIController = this.GetComponent<UIController>();
+    Config = this.GetComponent<ConfigController>();
     TheScoreController = this.GetComponent<ScoreController>();
     Solver = this.GetComponent<GameSolver>();
+    Stats = this.GetComponent<StatsController>();
 
     Assert.IsNotNull(StateManager);
     Assert.IsNotNull(TheRuleEngine);
     Assert.IsNotNull(Spawner);
     Assert.IsNotNull(TheCameraController);
     Assert.IsNotNull(TheUIController);
+    Assert.IsNotNull(Config);
     Assert.IsNotNull(TheScoreController);
     Assert.IsNotNull(Solver);
+    Assert.IsNotNull(Stats);
 
     Assert.IsNotNull(boat);
   }

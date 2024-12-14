@@ -14,11 +14,20 @@ public static class APIClient
   public static IEnumerator FetchMnCSolution(MnCSolveRequest request, Action<MnCSolveResponse> onSuccess)
   {
     using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/missionary-cannibal",
-             JsonUtility.ToJson(request), "application/json"))
+             JsonConvert.SerializeObject(request), "application/json"))
     {
       yield return www.SendWebRequest();
 
-      MnCSolveResponse response = JsonConvert.DeserializeObject<MnCSolveResponse>(www.downloadHandler.text);
+      MnCSolveResponse response = new MnCSolveResponse();
+      try
+      {
+        response = JsonConvert.DeserializeObject<MnCSolveResponse>(www.downloadHandler.text);
+      }
+      catch (Exception)
+      {
+        Debug.LogError("Could not parse response: " + www.downloadHandler.text);
+        throw;
+      }
       onSuccess?.Invoke(response);
     }
   }
@@ -26,17 +35,29 @@ public static class APIClient
   public static IEnumerator FetchJHSolution(JHSolveRequest request, Action<JHSolveResponse> onSuccess)
   {
     using (UnityWebRequest www = UnityWebRequest.Post("https://vivekraman.dev/jealous-husband",
-             JsonUtility.ToJson(request), "application/json"))
+             JsonConvert.SerializeObject(request), "application/json"))
     {
       yield return www.SendWebRequest();
 
-      JHSolveResponse response =
-        JsonConvert.DeserializeObject<JHSolveResponse>(www.downloadHandler.text);
-      response.parsedOutput = new Dictionary<string, JHStage>();
-      foreach ((string key, JHStageRaw val) in response.output)
+      JHSolveResponse response = new JHSolveResponse();
+      try
       {
-        response.parsedOutput[key] = JHStage.FromRaw(val);
+        response = JsonConvert.DeserializeObject<JHSolveResponse>(www.downloadHandler.text);
+        response.parsedOutput = new Dictionary<string, JHStage>();
+        if (response.output != null)
+        {
+          foreach ((string key, JHStageRaw val) in response.output)
+          {
+            response.parsedOutput[key] = JHStage.FromRaw(val);
+          }
+        }
       }
+      catch (Exception)
+      {
+        Debug.LogError("Could not parse response: " + www.downloadHandler.text);
+        throw;
+      }
+
       onSuccess?.Invoke(response);
     }
   }

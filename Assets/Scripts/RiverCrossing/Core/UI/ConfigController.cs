@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 namespace dev.vivekraman.RiverCrossing.Core.UI
 {
@@ -11,6 +12,10 @@ public class ConfigController : MonoBehaviour
   [SerializeField] private TMP_Text characterCountMnCText = null;
   [SerializeField] private TMP_Text boatCapacityJHText = null;
   [SerializeField] private TMP_Text characterCountJHText = null;
+  [SerializeField] private Slider boatCapacityMnCSlider = null;
+  [SerializeField] private Slider characterCountMnCSlider = null;
+  [SerializeField] private Slider boatCapacityJHSlider = null;
+  [SerializeField] private Slider characterCountJHSlider = null;
 
   private void Awake()
   {
@@ -18,6 +23,10 @@ public class ConfigController : MonoBehaviour
     Assert.IsNotNull(characterCountMnCText);
     Assert.IsNotNull(boatCapacityJHText);
     Assert.IsNotNull(characterCountJHText);
+    Assert.IsNotNull(boatCapacityMnCSlider);
+    Assert.IsNotNull(characterCountMnCSlider);
+    Assert.IsNotNull(boatCapacityJHSlider);
+    Assert.IsNotNull(characterCountJHSlider);
   }
 
   private void Start()
@@ -66,6 +75,14 @@ public class ConfigController : MonoBehaviour
   {
     GameManager gameManager = GameManager.Instance;
     gameManager.Solver.Traversal = (TraversalMode) value;
+  }
+
+  public void ForceResetSliders()
+  {
+    boatCapacityMnCSlider.value = 2;
+    characterCountMnCSlider.value = 3;
+    boatCapacityJHSlider.value = 2;
+    characterCountJHSlider.value = 3;
   }
 }
 }

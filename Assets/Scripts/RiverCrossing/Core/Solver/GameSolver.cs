@@ -14,10 +14,11 @@ namespace dev.vivekraman.RiverCrossing.Core.Solver
 public class GameSolver : BaseSpawner
 {
   public TraversalMode Traversal { get; set; } = TraversalMode.BreadthFirst;
+  public int StateCount { get; private set; } = 0;
+
   private Dictionary<string, MnCStage> solutionMnC = null;
   private Dictionary<string, JHStage> solutionJH = null;
 
-  private int stateCount = 0;
   private int index = 0;
   private bool loading = false;
 
@@ -97,7 +98,7 @@ public class GameSolver : BaseSpawner
     }
 
     solutionMnC = response.output;
-    stateCount = response.number_of_states;
+    StateCount = response.number_of_states;
   }
 
   private IEnumerator SolveJealousHusbands()
@@ -175,7 +176,7 @@ public class GameSolver : BaseSpawner
       return;
     }
     solutionJH = response.parsedOutput;
-    stateCount = response.number_of_states;
+    StateCount = response.number_of_states;
   }
 
   /// <summary>

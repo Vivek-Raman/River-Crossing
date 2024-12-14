@@ -61,8 +61,10 @@ public class UIController : MonoBehaviour
 
   private void SwitchGameMode(GameMode gameMode)
   {
-    GameManager.Instance.TheRuleEngine.TheGameMode = gameMode;
-    GameManager.Instance.Spawner.LoadInitialStateForGameMode(gameMode);
+    GameManager gameManager = GameManager.Instance;
+    gameManager.Config.ForceResetSliders();
+    gameManager.TheRuleEngine.TheGameMode = gameMode;
+    gameManager.Spawner.LoadInitialStateForGameMode(gameMode);
   }
 
   public void UI_PlayGame()
@@ -81,6 +83,7 @@ public class UIController : MonoBehaviour
     }
 
     gameManager.TheScoreController.UpdateTargetDisplay();
+    gameManager.Stats.UpdateStats();
     gameManager.StateManager.SetState(nameof(IdleState));
   }
 
