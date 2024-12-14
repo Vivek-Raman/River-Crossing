@@ -28,6 +28,12 @@ MonoBehaviour:
   - characterClass: 3
     qualifier: 3
     prefab: {fileID: 8270180161961502857, guid: 783afe790f096dd4a819cc03aee66eb8, type: 3}
+  - characterClass: 3
+    qualifier: 4
+    prefab: {fileID: 1726976984411242543, guid: eaaec130a5a91ea45875a5107a5c8091, type: 3}
+  - characterClass: 3
+    qualifier: 5
+    prefab: {fileID: 5529941654496441120, guid: 0de930e7e8924bc428210099b0331651, type: 3}
   - characterClass: 4
     qualifier: 1
     prefab: {fileID: 3336599749225008226, guid: 7c882c362a592714a9e095add7803545, type: 3}
@@ -37,3 +43,9 @@ MonoBehaviour:
   - characterClass: 4
     qualifier: 3
     prefab: {fileID: 5872707220566714449, guid: 57e8e41b336bfa240ae4d81046c24b5c, type: 3}
+  - characterClass: 4
+    qualifier: 4
+    prefab: {fileID: 7814493015211550194, guid: 4ae089c93c7d53f4997b7a10c2417cf8, type: 3}
+  - characterClass: 4
+    qualifier: 5
+    prefab: {fileID: 6094795712993600367, guid: 08de53a22bc36054aa0ef5f2c18bef40, type: 3}
