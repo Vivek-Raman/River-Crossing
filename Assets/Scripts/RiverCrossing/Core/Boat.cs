@@ -26,6 +26,8 @@ public class Boat : MonoBehaviour
     Assert.IsNotNull(leftWaypoint);
     Assert.IsNotNull(rightWaypoint);
 
+    this.transform.position = leftWaypoint.position;
+
     gameManager = GameManager.Instance;
     Assert.IsNotNull(gameManager);
 

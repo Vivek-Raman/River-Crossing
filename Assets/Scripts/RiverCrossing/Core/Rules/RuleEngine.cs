@@ -84,7 +84,7 @@ public class RuleEngine : MonoBehaviour
               }
             }
 
-            return atRisk;
+            return !atRisk;
           }
         }
 

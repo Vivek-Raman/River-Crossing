@@ -1101,7 +1101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7294118}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9372549}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3043,7 +3043,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7811153880873897698, guid: 29f979e2966a20c4cbf89b8618237f1f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.345
+      value: -0.063
       objectReference: {fileID: 0}
     - target: {fileID: 7811153880873897698, guid: 29f979e2966a20c4cbf89b8618237f1f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10636,7 +10636,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7811153880873897698, guid: 29f979e2966a20c4cbf89b8618237f1f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.57945013
+      value: -0.245
       objectReference: {fileID: 0}
     - target: {fileID: 7811153880873897698, guid: 29f979e2966a20c4cbf89b8618237f1f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10717,7 +10717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3542276754309331853, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.414001
+      value: 29.635
       objectReference: {fileID: 0}
     - target: {fileID: 3542276754309331853, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10750,6 +10750,22 @@ PrefabInstance:
     - target: {fileID: 3542276754309331853, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5854141609417383730, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
+      propertyPath: m_Size.y
+      value: 0.25555944
+      objectReference: {fileID: 0}
+    - target: {fileID: 5854141609417383730, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
+      propertyPath: m_Size.z
+      value: 1.2653817
+      objectReference: {fileID: 0}
+    - target: {fileID: 5854141609417383730, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
+      propertyPath: m_Center.y
+      value: -0.10087514
+      objectReference: {fileID: 0}
+    - target: {fileID: 5854141609417383730, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
+      propertyPath: m_Center.z
+      value: -5.4373755e-16
       objectReference: {fileID: 0}
     - target: {fileID: 8443676826808934780, guid: 6250b04b77977d84c8dd240f68143b81, type: 3}
       propertyPath: m_Name
