@@ -25,6 +25,7 @@ public class MainMenuState : State
 
     gameManager.TheUIController.SetMainMenuUIState(false);
     gameManager.TheCameraController.FocusGameplay();
+    gameManager.Hover.Initialized = true;
     yield return new WaitForSeconds(1);
     yield break;
   }

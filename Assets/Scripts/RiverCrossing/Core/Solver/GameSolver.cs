@@ -98,7 +98,7 @@ public class GameSolver : BaseSpawner
     }
 
     solutionMnC = response.output;
-    StateCount = response.number_of_states;
+    StateCount = response.number_of_states - 1;
   }
 
   private IEnumerator SolveJealousHusbands()
@@ -176,7 +176,7 @@ public class GameSolver : BaseSpawner
       return;
     }
     solutionJH = response.parsedOutput;
-    StateCount = response.number_of_states;
+    StateCount = response.number_of_states - 1;
   }
 
   /// <summary>

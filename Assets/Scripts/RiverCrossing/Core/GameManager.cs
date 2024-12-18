@@ -20,6 +20,7 @@ namespace dev.vivekraman.RiverCrossing.Core
 [RequireComponent(typeof(ScoreController))]
 [RequireComponent(typeof(GameSolver))]
 [RequireComponent(typeof(ConfigController))]
+[RequireComponent(typeof(CharacterHover))]
 public class GameManager : MonoBehaviour
 {
   public static GameManager Instance { get; private set; } = null;
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
   public ScoreController TheScoreController { get; private set; } = null;
   public GameSolver Solver { get; private set; } = null;
   public StatsController Stats { get; private set; } = null;
+  public CharacterHover Hover { get; private set; } = null;
 
   [SerializeField] private Boat boat = null;
 
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour
     TheScoreController = this.GetComponent<ScoreController>();
     Solver = this.GetComponent<GameSolver>();
     Stats = this.GetComponent<StatsController>();
+    Hover = this.GetComponent<CharacterHover>();
 
     Assert.IsNotNull(StateManager);
     Assert.IsNotNull(TheRuleEngine);
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour
     Assert.IsNotNull(TheScoreController);
     Assert.IsNotNull(Solver);
     Assert.IsNotNull(Stats);
+    Assert.IsNotNull(Hover);
 
     Assert.IsNotNull(boat);
   }
