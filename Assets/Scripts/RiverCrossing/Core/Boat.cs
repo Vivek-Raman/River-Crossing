@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using dev.vivekraman.RiverCrossing.Core.Enums;
@@ -57,7 +58,7 @@ public class Boat : MonoBehaviour
   {
     if (character.Side != this.CurrentSide) return;
 
-    if (!gameManager.CanBoardBoat) return;
+    if (!gameManager.CanBoardBoat && gameManager.StateManager.CurrentState.Name != nameof(SolveState)) return;
 
     BoatSide boatSide = charactersOnBoard.Where(entry => entry.Value.Name == character.Name)
       .Select(entry => entry.Key)
@@ -130,43 +131,48 @@ public class Boat : MonoBehaviour
     switch (side)
     {
       case RiverBankSide.Left:
-        this.transform.position = leftWaypoint.position;
+        this.transform.DOMove(leftWaypoint.position, 1f);
         break;
       case RiverBankSide.Right:
-        this.transform.position = rightWaypoint.position;
+        this.transform.DOMove(rightWaypoint.position, 1f);
         break;
     }
+    CurrentSide = CurrentSide == RiverBankSide.Left ? RiverBankSide.Right : RiverBankSide.Left;
   }
 
-  public void ForceAlightAll()
+  public IEnumerator ForceAlightAll()
   {
     if (charactersOnBoard.TryGetValue(BoatSide.Left1, out Character left1))
     {
-      left1.transform.position = gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(left1).position;
+      left1.transform.DOJump(gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(left1).position, 1f, 1, 1f);
       left1.Side = CurrentSide;
       left1.transform.SetParent(null);
       charactersOnBoard.Remove(BoatSide.Left1);
+      yield return new WaitForSeconds(1f);
     }
     if (charactersOnBoard.TryGetValue(BoatSide.Right1, out Character right1))
     {
-      right1.transform.position = gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(right1).position;
+      right1.transform.DOJump(gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(right1).position, 1f, 1, 1f);
       right1.Side = CurrentSide;
       right1.transform.SetParent(null);
       charactersOnBoard.Remove(BoatSide.Right1);
+      yield return new WaitForSeconds(1f);
     }
     if (charactersOnBoard.TryGetValue(BoatSide.Left2, out Character left2))
     {
-      left2.transform.position = gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(left2).position;
+      left2.transform.DOJump(gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(left2).position, 1f, 1, 1f);
       left2.Side = CurrentSide;
       left2.transform.SetParent(null);
       charactersOnBoard.Remove(BoatSide.Left2);
+      yield return new WaitForSeconds(1f);
     }
     if (charactersOnBoard.TryGetValue(BoatSide.Right2, out Character right2))
     {
-      right2.transform.position = gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(right2).position;
+      right2.transform.DOJump(gameManager.GetRiverBank(CurrentSide).AssignAnchorToCharacter(right2).position, 1f, 1, 1f);
       right2.Side = CurrentSide;
       right2.transform.SetParent(null);
       charactersOnBoard.Remove(BoatSide.Right2);
+      yield return new WaitForSeconds(1f);
     }
   }
 }

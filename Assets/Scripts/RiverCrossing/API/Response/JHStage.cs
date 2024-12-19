@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using dev.vivekraman.RiverCrossing.Core.Enums;
 
 namespace dev.vivekraman.RiverCrossing.API.Response
 {
@@ -35,6 +36,42 @@ public class JHStage
     stage.boat_position = raw.boat_position;
 
     return stage;
+  }
+
+  public static CharacterClass ParseDictKey(string c)
+  {
+    switch (c)
+    {
+      case "H":
+        return CharacterClass.Husband;
+      case "W":
+        return CharacterClass.Wife;
+    }
+
+    return CharacterClass.Null;
+  }
+
+  public override string ToString()
+  {
+    string s = "Boat: " + boat_position + "\tLeft: [";
+    foreach ((string characterClass, HashSet<long> qualifiers) in left_bank)
+    {
+      foreach (long qualifier in qualifiers)
+      {
+        s += characterClass + qualifier.ToString() + ",";
+      }
+    }
+    s += "],\tRight: [";
+    foreach ((string characterClass, HashSet<long> qualifiers) in right_bank)
+    {
+      foreach (long qualifier in qualifiers)
+      {
+        s += characterClass + qualifier.ToString() + ",";
+      }
+    }
+    s += "]";
+
+    return s;
   }
 }
 }

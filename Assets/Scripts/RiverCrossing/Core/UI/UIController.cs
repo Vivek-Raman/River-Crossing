@@ -115,12 +115,12 @@ public class UIController : MonoBehaviour
 
   public void UI_SolverStepForward()
   {
-    GameManager.Instance.Solver.StepThrough(1);
+    StartCoroutine(GameManager.Instance.Solver.StepThrough(1));
   }
 
   public void UI_SolverStepBackward()
   {
-    GameManager.Instance.Solver.StepThrough(-1);
+    StartCoroutine(GameManager.Instance.Solver.StepThrough(-1));
   }
 }
 }

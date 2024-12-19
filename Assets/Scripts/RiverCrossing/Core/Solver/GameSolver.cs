@@ -7,6 +7,7 @@ using dev.vivekraman.RiverCrossing.API.Request;
 using dev.vivekraman.RiverCrossing.API.Response;
 using dev.vivekraman.RiverCrossing.Core.Enums;
 using dev.vivekraman.RiverCrossing.Core.Spawner;
+using NUnit.Framework;
 using UnityEngine;
 
 namespace dev.vivekraman.RiverCrossing.Core.Solver
@@ -183,93 +184,107 @@ public class GameSolver : BaseSpawner
   /// Moves all game objects to the state defined by <c>index + increment</c>
   /// </summary>
   /// <param name="increment">Use only -1 or 1, to step backwards or forwards, respectively.</param>
-  public void StepThrough(int increment)
+  public IEnumerator StepThrough(int increment)
   {
-    if (loading) return;
+    if (loading) yield break;
+    loading = true;
     GameManager gameManager = GameManager.Instance;
     switch (gameManager.TheRuleEngine.TheGameMode)
     {
       case GameMode.MissionariesAndCannibals:
-        StepThroughMissionariesAndCannibals(increment);
+        yield return StepThroughMissionariesAndCannibals(increment);
         break;
       case GameMode.JealousHusbands:
-        StepThroughJealousHusbands(increment);
+        yield return StepThroughJealousHusbands(increment);
         break;
     }
+    loading = false;
   }
 
-  private void StepThroughMissionariesAndCannibals(int increment)
+  private IEnumerator StepThroughMissionariesAndCannibals(int increment)
   {
     GameManager gameManager = GameManager.Instance;
 
     if (!solutionMnC.TryGetValue((index + increment).ToString(), out MnCStage nextStage))
     {
-      return;
+      yield break;
     }
 
-    FlushAllCharacters();
-    int counter = 0;
-    for (int i = 0; i < nextStage.M_left; ++i)
+    MnCStage currentStage = solutionMnC[index.ToString()];
+    MnCStage diff = DiffCalculator.CalculateStateDiff(currentStage, nextStage);
+    List<Character> characters;
+    Dictionary<CharacterClass, int> toMove = new Dictionary<CharacterClass, int>();
+    if (diff.boat_position[0] == 'r')
     {
-      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, 0, RiverBankSide.Left, counter++);
+      characters = gameManager.GetRiverBank(RiverBankSide.Left).FetchBankedCharacters();
+      toMove.Add(CharacterClass.Missionary, diff.M_right);
+      toMove.Add(CharacterClass.Cannibal, diff.C_right);
     }
-    for (int i = 0; i < nextStage.C_left; ++i)
+    else
     {
-      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Left, counter++);
+      characters = gameManager.GetRiverBank(RiverBankSide.Right).FetchBankedCharacters();
+      toMove.Add(CharacterClass.Missionary, diff.M_left);
+      toMove.Add(CharacterClass.Cannibal, diff.C_left);
     }
-    for (int i = 0; i < nextStage.M_right; ++i)
+
+    List<Character> charactersToMove = new List<Character>();
+    foreach (Character character in characters)
     {
-      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Missionary, 0, RiverBankSide.Right, counter++);
+      if (toMove[character.TheCharacterClass] <= 0) continue;
+      charactersToMove.Add(character);
+      --toMove[character.TheCharacterClass];
     }
-    for (int i = 0; i < nextStage.C_right; ++i)
+
+    foreach (Character character in charactersToMove)
     {
-      SpawnCharacterOnRiverBank(gameManager, CharacterClass.Cannibal, 0, RiverBankSide.Right, counter++);
+      gameManager.TheBoat.TryToggleBoard(character);
+      yield return new WaitForSeconds(1f);
     }
 
     gameManager.TheBoat.ForceBoatToBank(ParseRiverBankSide(nextStage.boat_position));
+    yield return new WaitForSeconds(1f);
+    yield return gameManager.TheBoat.ForceAlightAll();
     index += increment;
   }
 
-  private void StepThroughJealousHusbands(int increment)
+  private IEnumerator StepThroughJealousHusbands(int increment)
   {
-    CharacterClass ParseJH(string c)
-    {
-      switch (c)
-      {
-        case "H":
-          return CharacterClass.Husband;
-        case "W":
-          return CharacterClass.Wife;
-      }
-
-      return CharacterClass.Null;
-    }
-
     GameManager gameManager = GameManager.Instance;
 
     if (!solutionJH.TryGetValue((index + increment).ToString(), out JHStage nextStage))
     {
-      return;
+      yield break;
     }
 
-    FlushAllCharacters();
-    int counter = 0;
-    foreach ((string charClass, HashSet<long> qualifiers) in nextStage.left_bank)
+    JHStage diff = DiffCalculator.CalculateStateDiff(solutionJH[index.ToString()], nextStage);
+    HashSet<string> delta = new HashSet<string>();
+    foreach ((string characterClass, HashSet<long> qualifiers) in diff.boat_position == "R" ? diff.right_bank : diff.left_bank)
     {
       foreach (long qualifier in qualifiers)
       {
-        SpawnCharacterOnRiverBank(gameManager, ParseJH(charClass), (int) qualifier, RiverBankSide.Left, counter++);
+        delta.Add(characterClass + qualifier.ToString());
       }
     }
-    foreach ((string charClass, HashSet<long> qualifiers) in nextStage.right_bank)
+    List<Character> charactersToMove = new List<Character>();
+    foreach (Character character in gameManager.GetRiverBank(diff.boat_position == "R" ? RiverBankSide.Left : RiverBankSide.Right)
+               .FetchBankedCharacters())
     {
-      foreach (long qualifier in qualifiers)
+      // if character in delta, add to charactersToMove
+      if (delta.Contains(character.TheCharacterClass.ToString()[0] + character.Qualifier.ToString()))
       {
-        SpawnCharacterOnRiverBank(gameManager, ParseJH(charClass), (int)qualifier, RiverBankSide.Right, counter++);
+        charactersToMove.Add(character);
       }
+    }
+
+    foreach (Character character in charactersToMove)
+    {
+      gameManager.TheBoat.TryToggleBoard(character);
+      yield return new WaitForSeconds(1f);
     }
 
     gameManager.TheBoat.ForceBoatToBank(ParseRiverBankSide(nextStage.boat_position));
+    yield return new WaitForSeconds(1f);
+    yield return gameManager.TheBoat.ForceAlightAll();
     index += increment;
   }
 

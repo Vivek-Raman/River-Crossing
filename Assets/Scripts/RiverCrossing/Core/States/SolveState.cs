@@ -14,9 +14,7 @@ public class SolveState : State
     gameManager.CanBoatMove = false;
     gameManager.CanBoardBoat = false;
     gameManager.TheRuleEngine.ShouldEvaluateRules = false;
-    gameManager.TheBoat.ForceAlightAll();
-
-    yield break;
+    yield return gameManager.TheBoat.ForceAlightAll();
   }
 
   public override bool CanExitState()
